@@ -119,6 +119,7 @@ class Spine {
 	 * @example spine.get(1);
 	 * @example spine.get("chap1.html");
 	 * @example spine.get("#id1234");
+	 * @example spine.get("contents/chap1.html");
 	 */
 	get(target) {
 		var index = 0;
@@ -142,6 +143,11 @@ class Spine {
 			// Remove fragments
 			target = target.split("#")[0];
 			index = this.spineByHref[target] || this.spineByHref[encodeURI(target)];
+			if (index === undefined) {
+				return this.spineItems.find(spineItem => (
+					spineItem.href.endsWith(target) || target.endsWith(spineItem.href)
+				)) || null;
+			}
 		}
 
 		return this.spineItems[index] || null;
